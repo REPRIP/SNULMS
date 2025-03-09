@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ course.CourseName }} - SNULMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <style>
+        .course-info {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #333;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        }
+        
+        .course-info h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .course-info p {
+            margin-bottom: 5px;
+        }
+        
+        .content-list {
+            margin-top: 20px;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1 class="logo">SNULMS</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="#content"><i class="fas fa-book"></i>Course Content</a></li>
+                <li><a href="#assignments"><i class="fas fa-tasks"></i>Assignments</a></li>
+                {% if is_faculty %}
+                <li><a href="#attendance"><i class="fas fa-check"></i>Attendance</a></li>
+                <li><a href="#grades"><i class="fas fa-star"></i>Grades</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Course Header -->
+            <div class="header">
+                <div class="welcome-text">
+                    {{ course.CourseName }}
+                </div>
+                <a href="{{ url_for('home') }}" class="logout-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Course Info -->
+            <div class="course-info">
+                <h2>{{ course.CourseName }}</h2>
+                <p><strong>Course ID:</strong> {{ course.CourseID }}</p>
+                <p><strong>Credits:</strong> {{ course.CourseCredit }}</p>
+                <p><strong>Professor:</strong> {{ course.FacultyFirstName }} {{ course.FacultyLastName }}</p>
+                <p><strong>Department:</strong> {{ course.DepartmentName }}</p>
+            </div>
+
+            <!-- Content Section -->
+            <div class="content-cards">
+                <!-- Course Content -->
+                <div class="card" id="content">
+                    <h3>Course Content</h3>
+                    {% if is_faculty %}
+                    <form class="content-form" method="POST">
+                        <input type="text" name="content_name" placeholder="Content Title" required>
+                        <textarea name="description" placeholder="Description" required></textarea>
+                        <input type="text" name="file_url" placeholder="File URL" required>
+                        <div class="checkbox-container">
+                            <input type="checkbox" name="is_assignment" id="is_assignment">
+                            <label for="is_assignment">Mark as Assignment</label>
+                        </div>
+                        <button type="submit" name="add_content" class="btn">Add Content</button>
+                    </form>
+                    {% endif %}
+
+                    <div class="content-list">
+                        {% for content in contents %}
+                        <div class="content-item">
+                            <div class="content-header">
+                                <h4>{{ content.CCName }}</h4>
+                                {% if content.IsAssignment %}
+                                <span class="badge">Assignment</span>
+                                {% endif %}
+                            </div>
+                            <p>{{ content.Description }}</p>
+                            <div class="content-footer">
+                                <a href="{{ content.FileUrl }}" target="_blank" class="btn">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                                <span class="upload-date">
+                                    Uploaded: {{ content.UploadDate.strftime('%Y-%m-%d') }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

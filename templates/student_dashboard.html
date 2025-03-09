@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard - SNULMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <style>
+        .course-list, .assignment-list {
+            margin-top: 15px;
+        }
+        
+        .course-item a, .assignment-item a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .attendance-stats {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h1 class="logo">SNULMS Student</h1>
+            <ul class="nav-links">
+                <li><a href="#"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-book"></i>My Courses</a></li>
+                <li><a href="#"><i class="fas fa-tasks"></i>Assignments</a></li>
+                <li><a href="#"><i class="fas fa-calendar-check"></i>Attendance</a></li>
+                <li><a href="#"><i class="fas fa-star"></i>Grades</a></li>
+                <li><a href="#"><i class="fas fa-user"></i>Profile</a></li>
+                <li><a href="#"><i class="fas fa-envelope"></i>Messages</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="welcome-text">Welcome, {{username}}!</div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+            <div class="content-cards">
+                <div class="card">
+                    <h3>Enrolled Courses</h3>
+                    <div class="course-list">
+                        {% for course in courses %}
+                        <div class="course-item">
+                            <a href="{{ url_for('course', course_id=course.CourseID) }}">
+                                <h4>{{ course.CourseName }}</h4>
+                                <p>{{ course.CourseID }} | Prof. {{ course.FacultyFirstName }} {{ course.FacultyLastName }}</p>
+                                <p>Credits: {{ course.CourseCredit }}</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 35%"></div>
+                                </div>
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="course-item">
+                            <p>No courses enrolled yet.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Upcoming Assignments</h3>
+                    <div class="assignment-list">
+                        {% for assignment in assignments %}
+                        <div class="assignment-item">
+                            <a href="{{ url_for('course', course_id=assignment.CourseID) }}">
+                                <p><i class="fas fa-clock"></i> Due: {{ assignment.UploadDate.strftime('%Y-%m-%d') }}</p>
+                                <h4>{{ assignment.CCName }}</h4>
+                                <p>{{ assignment.Description[:100] }}{% if assignment.Description|length > 100 %}...{% endif %}</p>
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="assignment-item">
+                            <p>No upcoming assignments.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Attendance Overview</h3>
+                    <div class="attendance-stats">
+                        <div class="stat-item">
+                            <h4>85%</h4>
+                            <p>Average Attendance</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>3</h4>
+                            <p>Classes Today</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

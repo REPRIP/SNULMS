@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reports - Admin Dashboard - SNULMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <style>
+        .report-section {
+            margin-bottom: 30px;
+        }
+        
+        .report-section h4 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: #333;
+        }
+        
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            height: 300px;
+            position: relative;
+        }
+        
+        .chart-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #333;
+            font-style: italic;
+        }
+        
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-container select, .filter-container input {
+            flex: 1;
+        }
+        
+        .export-btn {
+            background: #4a6fa5;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .export-btn:hover {
+            background: #3a5a80;
+            transform: translateY(-2px);
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 992px) {
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .stat-card i {
+            font-size: 24px;
+            color: #4a6fa5;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card h3 {
+            font-size: 28px;
+            margin: 10px 0;
+            color: #333;
+        }
+        
+        .stat-card p {
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .report-table th, .report-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .report-table th {
+            background: rgba(255, 255, 255, 0.2);
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .report-table tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .report-table tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h1 class="logo">SNULMS Admin</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="{{ url_for('admin_add_user') }}"><i class="fas fa-user-plus"></i>Add Users</a></li>
+                <li><a href="{{ url_for('admin_manage_users') }}"><i class="fas fa-users"></i>Manage Users</a></li>
+                <li><a href="{{ url_for('admin_manage_courses') }}"><i class="fas fa-book"></i>Manage Courses</a></li>
+                <li><a href="{{ url_for('admin_reports') }}" class="active"><i class="fas fa-chart-line"></i>Reports</a></li>
+                <li><a href="{{ url_for('admin_settings') }}"><i class="fas fa-cog"></i>Settings</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="welcome-text">
+                    System Reports
+                </div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+            <div class="content-cards">
+                <div class="card">
+                    <h3>System Overview</h3>
+                    
+                    <!-- Stats Overview -->
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <h3>{{ total_users }}</h3>
+                            <p>Total Users</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-user-graduate"></i>
+                            <h3>{{ total_students }}</h3>
+                            <p>Total Students</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <h3>{{ total_faculty }}</h3>
+                            <p>Total Faculty</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-book"></i>
+                            <h3>{{ total_courses }}</h3>
+                            <p>Total Courses</p>
+                        </div>
+                    </div>
+                    
+                    <!-- User Registration Report -->
+                    <div class="report-section">
+                        <h4><i class="fas fa-user-plus"></i> User Registration Report</h4>
+                        <div class="filter-container">
+                            <select id="timeRangeFilter" onchange="filterUserReport()">
+                                <option value="week">Last Week</option>
+                                <option value="month" selected>Last Month</option>
+                                <option value="quarter">Last Quarter</option>
+                                <option value="year">Last Year</option>
+                            </select>
+                            <select id="roleFilter" onchange="filterUserReport()">
+                                <option value="">All Roles</option>
+                                <option value="student">Students</option>
+                                <option value="faculty">Faculty</option>
+                                <option value="admin">Admins</option>
+                            </select>
+                        </div>
+                        <div class="report-grid">
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <p>User Registration Chart</p>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="report-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Students</th>
+                                            <th>Faculty</th>
+                                            <th>Admins</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for report in user_reports %}
+                                        <tr>
+                                            <td>{{ report.date }}</td>
+                                            <td>{{ report.students }}</td>
+                                            <td>{{ report.faculty }}</td>
+                                            <td>{{ report.admins }}</td>
+                                            <td>{{ report.total }}</td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="5" style="text-align: center;">No data available</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <button class="export-btn" onclick="exportUserReport()">
+                            <i class="fas fa-download"></i> Export Report
+                        </button>
+                    </div>
+                    
+                    <!-- Course Enrollment Report -->
+                    <div class="report-section">
+                        <h4><i class="fas fa-graduation-cap"></i> Course Enrollment Report</h4>
+                        <div class="filter-container">
+                            <select id="semesterFilter" onchange="filterCourseReport()">
+                                <option value="">All Semesters</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                            <select id="departmentFilterCourse" onchange="filterCourseReport()">
+                                <option value="">All Departments</option>
+                                {% for dept in departments %}
+                                <option value="{{ dept.DepartmentID }}">{{ dept.DepartmentName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="report-grid">
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <p>Course Enrollment Chart</p>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="report-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Course ID</th>
+                                            <th>Course Name</th>
+                                            <th>Department</th>
+                                            <th>Semester</th>
+                                            <th>Enrollments</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for course in course_reports %}
+                                        <tr>
+                                            <td>{{ course.CourseID }}</td>
+                                            <td>{{ course.CourseName }}</td>
+                                            <td>{{ course.DepartmentName }}</td>
+                                            <td>{{ course.SemesterNo }}</td>
+                                            <td>{{ course.Enrollments }}</td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="5" style="text-align: center;">No data available</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <button class="export-btn" onclick="exportCourseReport()">
+                            <i class="fas fa-download"></i> Export Report
+                        </button>
+                    </div>
+                    
+                    <!-- Department Performance Report -->
+                    <div class="report-section">
+                        <h4><i class="fas fa-building"></i> Department Performance Report</h4>
+                        <div class="filter-container">
+                            <input type="date" id="startDate" onchange="filterDepartmentReport()">
+                            <input type="date" id="endDate" onchange="filterDepartmentReport()">
+                        </div>
+                        <div class="report-grid">
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <p>Department Performance Chart</p>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="report-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Department</th>
+                                            <th>Students</th>
+                                            <th>Faculty</th>
+                                            <th>Courses</th>
+                                            <th>Avg. Performance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for dept in department_reports %}
+                                        <tr>
+                                            <td>{{ dept.DepartmentName }}</td>
+                                            <td>{{ dept.Students }}</td>
+                                            <td>{{ dept.Faculty }}</td>
+                                            <td>{{ dept.Courses }}</td>
+                                            <td>{{ dept.AvgPerformance }}%</td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="5" style="text-align: center;">No data available</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <button class="export-btn" onclick="exportDepartmentReport()">
+                            <i class="fas fa-download"></i> Export Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    // Initialize date inputs with default values (last month)
+    window.onload = function() {
+        const today = new Date();
+        const lastMonth = new Date();
+        lastMonth.setMonth(today.getMonth() - 1);
+        
+        document.getElementById('endDate').valueAsDate = today;
+        document.getElementById('startDate').valueAsDate = lastMonth;
+    };
+    
+    function filterUserReport() {
+        const timeRange = document.getElementById('timeRangeFilter').value;
+        const role = document.getElementById('roleFilter').value;
+        
+        // Construct the URL with filter parameters
+        let url = "{{ url_for('admin_reports') }}?";
+        if (timeRange) url += "time_range=" + timeRange + "&";
+        if (role) url += "role=" + role;
+        
+        window.location.href = url;
+    }
+    
+    function filterCourseReport() {
+        const semester = document.getElementById('semesterFilter').value;
+        const department = document.getElementById('departmentFilterCourse').value;
+        
+        // Construct the URL with filter parameters
+        let url = "{{ url_for('admin_reports') }}?";
+        if (semester) url += "semester=" + semester + "&";
+        if (department) url += "department=" + department;
+        
+        window.location.href = url;
+    }
+    
+    function filterDepartmentReport() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        
+        if (startDate && endDate) {
+            // Construct the URL with filter parameters
+            let url = "{{ url_for('admin_reports') }}?";
+            url += "start_date=" + startDate + "&end_date=" + endDate;
+            
+            window.location.href = url;
+        }
+    }
+    
+    function exportUserReport() {
+        const timeRange = document.getElementById('timeRangeFilter').value;
+        const role = document.getElementById('roleFilter').value;
+        
+        // Construct the URL for export
+        let url = "{{ url_for('admin_export_user_report') }}?";
+        if (timeRange) url += "time_range=" + timeRange + "&";
+        if (role) url += "role=" + role;
+        
+        window.location.href = url;
+    }
+    
+    function exportCourseReport() {
+        const semester = document.getElementById('semesterFilter').value;
+        const department = document.getElementById('departmentFilterCourse').value;
+        
+        // Construct the URL for export
+        let url = "{{ url_for('admin_export_course_report') }}?";
+        if (semester) url += "semester=" + semester + "&";
+        if (department) url += "department=" + department;
+        
+        window.location.href = url;
+    }
+    
+    function exportDepartmentReport() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        
+        // Construct the URL for export
+        let url = "{{ url_for('admin_export_department_report') }}?";
+        if (startDate && endDate) {
+            url += "start_date=" + startDate + "&end_date=" + endDate;
+        }
+        
+        window.location.href = url;
+    }
+    </script>
+</body>
+</html> 

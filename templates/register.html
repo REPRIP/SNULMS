@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Register - SNULMS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #e0eafc, #cfdef3, #e0eafc);
+            padding: 20px;
+        }
+
+        .register-form {
+            width: 400px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 35px rgba(31, 38, 135, 0.15);
+        }
+
+        .register-form h2 {
+            color: #333;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .register-form input,
+        .register-form select {
+            width: 100%;
+            padding: 15px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            outline: none;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .register-form input::placeholder {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .register-form select {
+            color: #333;
+            cursor: pointer;
+        }
+
+        .register-form select option {
+            color: #333;
+            background: white;
+        }
+
+        .register-form input:focus,
+        .register-form select:focus {
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-form input[type="submit"] {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: 600;
+            font-size: 18px;
+            transition: transform 0.2s;
+            border: none;
+        }
+
+        .register-form input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(37, 117, 252, 0.4);
+        }
+
+        .msg {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .login-link {
+            margin-top: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .login-link a {
+            color: #4a6fa5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-form">
+        <h2>Create Account</h2>
+        {% if error %}
+        <p style="color: red;">{{ error }}</p>
+        {% endif %}
+        <form action="{{ url_for('register') }}" method="post">
+            <input type="number" name="ID" placeholder="ID" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="text" name="firstname" placeholder="First Name" required>
+            <input type="text" name="lastname" placeholder="Last Name">
+            <input type="email" name="email" placeholder="Email Address" required>
+            <select name="role" id="role" onchange="showRoleFields()" required>
+                <option value="">Select Role</option>
+                <option value="student">Student</option>
+                <option value="faculty">Faculty</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <!-- Department Selection -->
+            <div>
+                <label>Department:</label>
+                <select name="department_id" required>
+                    {% for dept in departments %}
+                    <option value="{{ dept.DepartmentID }}">{{ dept.DepartmentName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Student-specific fields -->
+            <div id="studentFields" style="display: none;">
+                <div>
+                    <label>Registration Number:</label>
+                    <input type="number" name="registration_no">
+                </div>
+                <div>
+                    <label>Phone Number:</label>
+                    <input type="number" name="phone">
+                </div>
+                <div>
+                    <label>Class:</label>
+                    <input type="text" name="class">
+                </div>
+                <div>
+                    <label>Date of Birth:</label>
+                    <input type="date" name="dob">
+                </div>
+                <div>
+                    <label>Semester:</label>
+                    <input type="text" name="semester">
+                </div>
+            </div>
+
+            <!-- Faculty-specific fields -->
+            <div id="facultyFields" style="display: none;">
+                <div>
+                    <label>Faculty ID:</label>
+                    <input type="number" name="faculty_id">
+                </div>
+                <div>
+                    <label>Phone Number:</label>
+                    <input type="number" name="phone">
+                </div>
+                <div>
+                    <label>Qualification:</label>
+                    <input type="text" name="qualification">
+                </div>
+                <div>
+                    <label>Level:</label>
+                    <input type="text" name="level">
+                </div>
+            </div>
+
+            <input type="submit" value="Register">
+        </form>
+        <div class="login-link">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
+    </div>
+
+    <script>
+        function showRoleFields() {
+            const role = document.getElementById('role').value;
+            document.getElementById('studentFields').style.display = role === 'student' ? 'block' : 'none';
+            document.getElementById('facultyFields').style.display = role === 'faculty' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

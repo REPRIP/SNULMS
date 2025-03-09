@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - SNULMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <style>
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-group {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        #studentFields, #facultyFields {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h1 class="logo">SNULMS Admin</h1>
+            <ul class="nav-links">
+                <li><a href="#"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-user-plus"></i>Add Users</a></li>
+                <li><a href="#"><i class="fas fa-users"></i>Manage Users</a></li>
+                <li><a href="#"><i class="fas fa-book"></i>Manage Courses</a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i>Reports</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i>Settings</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="welcome-text">
+                    Welcome, {{username}}!
+                </div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+            <div class="content-cards">
+                <div class="card">
+                    <h3>Add New User</h3>
+                    <form action="{{ url_for('register') }}" method="post">
+                        <div class="form-group">
+                            <div>
+                                <input type="number" name="ID" placeholder="ID" required>
+                            </div>
+                            <div>
+                                <input type="text" name="username" placeholder="Username" required>
+                            </div>
+                            <div>
+                                <input type="password" name="password" placeholder="Password" required>
+                            </div>
+                            <div>
+                                <input type="text" name="firstname" placeholder="First Name" required>
+                            </div>
+                            <div>
+                                <input type="text" name="lastname" placeholder="Last Name" required>
+                            </div>
+                            <div>
+                                <input type="email" name="email" placeholder="Email" required>
+                            </div>
+                            <div>
+                                <select name="role" id="role" onchange="showRoleFields()" required>
+                                    <option value="">Select Role</option>
+                                    <option value="student">Student</option>
+                                    <option value="faculty">Faculty</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select name="department_id" required>
+                                    <option value="">Select Department</option>
+                                    {% for dept in departments %}
+                                    <option value="{{ dept.DepartmentID }}">{{ dept.DepartmentName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Student Fields -->
+                        <div id="studentFields" style="display: none;">
+                            <h4>Student Details</h4>
+                            <div class="form-group">
+                                <div>
+                                    <label for="registration_no">Registration Number</label>
+                                    <input type="number" id="registration_no" name="registration_no" placeholder="Registration Number">
+                                </div>
+                                <div>
+                                    <label for="phone">Phone Number</label>
+                                    <input type="number" id="phone" name="phone" placeholder="Phone Number">
+                                </div>
+                                <div>
+                                    <label for="class">Class</label>
+                                    <input type="text" id="class" name="class" placeholder="Class">
+                                </div>
+                                <div>
+                                    <label for="dob">Date of Birth</label>
+                                    <input type="date" id="dob" name="dob">
+                                </div>
+                                <div>
+                                    <label for="semester">Semester</label>
+                                    <input type="text" id="semester" name="semester" placeholder="Semester">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Faculty Fields -->
+                        <div id="facultyFields" style="display: none;">
+                            <h4>Faculty Details</h4>
+                            <div class="form-group">
+                                <div>
+                                    <label for="faculty_id">Faculty ID</label>
+                                    <input type="number" id="faculty_id" name="faculty_id" placeholder="Faculty ID">
+                                </div>
+                                <div>
+                                    <label for="faculty_phone">Phone Number</label>
+                                    <input type="number" id="faculty_phone" name="phone" placeholder="Phone Number">
+                                </div>
+                                <div>
+                                    <label for="qualification">Qualification</label>
+                                    <input type="text" id="qualification" name="qualification" placeholder="Qualification">
+                                </div>
+                                <div>
+                                    <label for="level">Level</label>
+                                    <input type="text" id="level" name="level" placeholder="Level">
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="submit" value="Add User" class="logout-btn" style="width: 100%; margin-top: 15px;">
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>System Overview</h3>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <i class="fas fa-users"></i>
+                            <p>Total Users: {{ total_users }}</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-book"></i>
+                            <p>Active Courses: {{ total_courses }}</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-user-graduate"></i>
+                            <p>Total Students: {{ total_students }}</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <p>Total Faculty: {{ total_faculty }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    function showRoleFields() {
+        const role = document.getElementById('role').value;
+        document.getElementById('studentFields').style.display = role === 'student' ? 'block' : 'none';
+        document.getElementById('facultyFields').style.display = role === 'faculty' ? 'block' : 'none';
+    }
+    </script>
+</body>
+</html>
