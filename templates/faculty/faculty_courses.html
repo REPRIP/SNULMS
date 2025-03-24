@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>My Courses - SNULMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <style>
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .course-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .course-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .course-stats {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1 class="logo">SNULMS Faculty</h1>
+            <ul class="nav-links">
+                <li><a href="/home"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="{{ url_for('faculty_courses') }}" class="active"><i class="fas fa-book"></i>My Courses</a></li>
+                <li><a href="{{ url_for('faculty_assignments') }}"><i class="fas fa-tasks"></i>Assignments</a></li>
+                <li><a href="{{ url_for('faculty_students') }}"><i class="fas fa-users"></i>Students</a></li>
+                <li><a href="{{ url_for('faculty_reports') }}"><i class="fas fa-chart-bar"></i>Reports</a></li>
+                <li><a href="{{ url_for('faculty_profile') }}"><i class="fas fa-user"></i>Profile</a></li>
+            </ul>
+        </div>
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="welcome-text">My Courses</div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+            
+            <div class="course-grid">
+                {% for course in courses %}
+                <div class="course-card">
+                    <h3>{{ course.CourseName }}</h3>
+                    <p>Course ID: {{ course.CourseID }}</p>
+                    <p>Semester: {{ course.SemesterNo }}</p>
+                    <p>Department: {{ course.DepartmentName }}</p>
+                    <div class="course-stats">
+                        <span>{{ course.student_count }} Students</span>
+                        <span>{{ course.assignment_count }} Assignments</span>
+                    </div>
+                    <a href="{{ url_for('faculty_course', course_id=course.CourseID) }}" class="btn">View Details</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

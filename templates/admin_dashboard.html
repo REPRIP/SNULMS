@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard - SNULMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="/static/css/dashboard.css  ">
     <style>
         .form-group {
             display: grid;
@@ -39,12 +39,11 @@
         <div class="sidebar">
             <h1 class="logo">SNULMS Admin</h1>
             <ul class="nav-links">
-                <li><a href="#"><i class="fas fa-home"></i>Dashboard</a></li>
-                <li><a href="#"><i class="fas fa-user-plus"></i>Add Users</a></li>
-                <li><a href="#"><i class="fas fa-users"></i>Manage Users</a></li>
-                <li><a href="#"><i class="fas fa-book"></i>Manage Courses</a></li>
-                <li><a href="#"><i class="fas fa-chart-line"></i>Reports</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i>Settings</a></li>
+                <li><a href="/home"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="/admin/users"><i class="fas fa-users"></i>Manage Users</a></li>
+                <li><a href="/admin/courses"><i class="fas fa-book"></i>Manage Courses</a></li>
+                <li><a href="/admin/reports"><i class="fas fa-chart-line"></i>Reports</a></li>
+                <li><a href="/admin/settings"><i class="fas fa-cog"></i>Settings</a></li>
             </ul>
         </div>
         <div class="main-content">

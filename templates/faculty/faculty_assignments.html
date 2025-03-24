@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Assignments - SNULMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <style>
+        .assignment-list {
+            padding: 20px;
+        }
+        .assignment-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .add-assignment {
+            margin-bottom: 20px;
+        }
+        .assignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Same sidebar as faculty_courses.html -->
+        <div class="sidebar">
+            <h1 class="logo">SNULMS Faculty</h1>
+            <ul class="nav-links">
+                <li><a href="/home"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="{{ url_for('faculty_courses') }}"><i class="fas fa-book"></i>My Courses</a></li>
+                <li><a href="{{ url_for('faculty_assignments') }}" class="active"><i class="fas fa-tasks"></i>Assignments</a></li>
+                <li><a href="{{ url_for('faculty_students') }}"><i class="fas fa-users"></i>Students</a></li>
+                <li><a href="{{ url_for('faculty_reports') }}"><i class="fas fa-chart-bar"></i>Reports</a></li>
+                <li><a href="{{ url_for('faculty_profile') }}"><i class="fas fa-user"></i>Profile</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <div class="welcome-text">Assignments</div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+
+            <div class="assignment-list">
+                <div class="add-assignment">
+                    <button class="btn" onclick="showAddAssignmentForm()">
+                        <i class="fas fa-plus"></i> Add New Assignment
+                    </button>
+                </div>
+
+                {% for assignment in assignments %}
+                <div class="assignment-card">
+                    <div class="assignment-header">
+                        <h3>{{ assignment.CCName }}</h3>
+                        <span class="course-name">{{ assignment.CourseName }}</span>
+                    </div>
+                    <p>{{ assignment.Description }}</p>
+                    <div class="assignment-details">
+                        <p><strong>Due Date:</strong> {{ assignment.DueDate }}</p>
+                        <p><strong>Total Marks:</strong> {{ assignment.TotalMarks }}</p>
+                        <p><strong>Submissions:</strong> {{ assignment.submission_count }}/{{ assignment.total_students }}</p>
+                    </div>
+                    <a href="#" class="btn">View Submissions</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
