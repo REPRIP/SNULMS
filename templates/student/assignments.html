@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Assignments - SNULMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <style>
+        .assignment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .assignment-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .assignment-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-submitted {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-graded {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .due-date {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h1 class="logo">SNULMS Student</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="{{ url_for('student_courses') }}"><i class="fas fa-book"></i>My Courses</a></li>
+                <li><a href="{{ url_for('student_assignments') }}" class="active"><i class="fas fa-tasks"></i>Assignments</a></li>
+                <li><a href="{{ url_for('student_attendance') }}"><i class="fas fa-calendar-check"></i>Attendance</a></li>
+                <li><a href="{{ url_for('student_grades') }}"><i class="fas fa-star"></i>Grades</a></li>
+                <li><a href="{{ url_for('student_profile') }}"><i class="fas fa-user"></i>Profile</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="welcome-text">Assignments</div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+            
+            <div class="assignment-grid">
+                {% for assignment in assignments %}
+                <div class="assignment-card">
+                    <h3>{{ assignment.CCName }}</h3>
+                    <p><strong>Course:</strong> {{ assignment.CourseName }}</p>
+                    <p><strong>Due Date:</strong> <span class="due-date">{{ assignment.UploadDate.strftime('%Y-%m-%d') }}</span></p>
+                    <p>{{ assignment.Description[:150] }}{% if assignment.Description|length > 150 %}...{% endif %}</p>
+                    
+                    {% if assignment.grade %}
+                        <div class="assignment-status status-graded">
+                            Grade: {{ assignment.grade }}/100
+                        </div>
+                    {% elif assignment.submitted_date %}
+                        <div class="assignment-status status-submitted">
+                            Submitted on {{ assignment.submitted_date.strftime('%Y-%m-%d') }}
+                        </div>
+                    {% else %}
+                        <div class="assignment-status status-pending">
+                            Pending Submission
+                        </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="assignment-card">
+                    <p>No assignments found.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

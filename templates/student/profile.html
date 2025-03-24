@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Profile - SNULMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            color: #6c757d;
+        }
+
+        .profile-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .info-group {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1 class="logo">SNULMS Student</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="{{ url_for('student_courses') }}"><i class="fas fa-book"></i>My Courses</a></li>
+                <li><a href="{{ url_for('student_assignments') }}"><i class="fas fa-tasks"></i>Assignments</a></li>
+                <li><a href="{{ url_for('student_attendance') }}"><i class="fas fa-calendar-check"></i>Attendance</a></li>
+                <li><a href="{{ url_for('student_grades') }}"><i class="fas fa-star"></i>Grades</a></li>
+                <li><a href="{{ url_for('student_profile') }}" class="active"><i class="fas fa-user"></i>Profile</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="welcome-text">My Profile</div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2>{{ profile.FirstName }} {{ profile.LastName }}</h2>
+                    <p>{{ profile.RegistrationNo }}</p>
+                </div>
+
+                <div class="profile-info">
+                    <div class="info-group">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">{{ profile.Email }}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Phone</div>
+                        <div class="info-value">{{ profile.PhoneNo }}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Department</div>
+                        <div class="info-value">{{ profile.DepartmentName }}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Semester</div>
+                        <div class="info-value">{{ profile.Semester }}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Class</div>
+                        <div class="info-value">{{ profile.Class }}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Date of Birth</div>
+                        <div class="info-value">{{ profile.DoB.strftime('%Y-%m-%d') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

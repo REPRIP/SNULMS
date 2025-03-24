@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Faculty Dashboard - SNULMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
     <style>
         .profile-info {
             margin-top: 15px;
@@ -37,11 +37,11 @@
             <h1 class="logo">SNULMS Faculty</h1>
             <ul class="nav-links">
                 <li><a href="#"><i class="fas fa-home"></i>Dashboard</a></li>
-                <li><a href="#"><i class="fas fa-book"></i>My Courses</a></li>
-                <li><a href="#"><i class="fas fa-tasks"></i>Assignments</a></li>
-                <li><a href="#"><i class="fas fa-users"></i>Students</a></li>
-                <li><a href="#"><i class="fas fa-chart-bar"></i>Reports</a></li>
-                <li><a href="#"><i class="fas fa-user"></i>Profile</a></li>
+                <li><a href="/faculty/courses"><i class="fas fa-book"></i>My Courses</a></li>
+                <li><a href="/faculty/assignments"><i class="fas fa-tasks"></i>Assignments</a></li>
+                <li><a href="/faculty/reports"><i class="fas fa-users"></i>Students</a></li>
+                <li><a href="/faculty/students"><i class="fas fa-chart-bar"></i>Reports</a></li>
+                <li><a href="/faculty/profile"><i class="fas fa-user"></i>Profile</a></li>
             </ul>
         </div>
         <div class="main-content">

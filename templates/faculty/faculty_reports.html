@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reports - SNULMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <style>
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px;
+        }
+        .report-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar navigation -->
+        <div class="sidebar">
+            <h1 class="logo">SNULMS Faculty</h1>
+            <ul class="nav-links">
+                <li><a href="/home"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="{{ url_for('faculty_courses') }}"><i class="fas fa-book"></i>My Courses</a></li>
+                <li><a href="{{ url_for('faculty_assignments') }}"><i class="fas fa-tasks"></i>Assignments</a></li>
+                <li><a href="{{ url_for('faculty_students') }}"><i class="fas fa-users"></i>Students</a></li>
+                <li><a href="{{ url_for('faculty_reports') }}" class="active"><i class="fas fa-chart-bar"></i>Reports</a></li>
+                <li><a href="{{ url_for('faculty_profile') }}"><i class="fas fa-user"></i>Profile</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <div class="welcome-text">Reports & Analytics</div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+
+            <div class="reports-grid">
+                <div class="report-card">
+                    <h3>Course Performance</h3>
+                    <div class="chart-container">
+                        <canvas id="coursePerformanceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <h3>Assignment Completion Rate</h3>
+                    <div class="chart-container">
+                        <canvas id="assignmentCompletionChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <h3>Attendance Overview</h3>
+                    <div class="chart-container">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <h3>Grade Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="gradeDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart initialization code would go here
+        // Using the data passed from the backend
+    </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>My Courses - SNULMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <style>
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .course-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h1 class="logo">SNULMS Student</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('student_dashboard') }}"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="{{ url_for('student_courses') }}" class="active"><i class="fas fa-book"></i>My Courses</a></li>
+                <li><a href="{{ url_for('student_assignments') }}"><i class="fas fa-tasks"></i>Assignments</a></li>
+                <li><a href="{{ url_for('student_attendance') }}"><i class="fas fa-calendar-check"></i>Attendance</a></li>
+                <li><a href="{{ url_for('student_grades') }}"><i class="fas fa-star"></i>Grades</a></li>
+                <li><a href="{{ url_for('student_profile') }}"><i class="fas fa-user"></i>Profile</a></li>
+                <li><a href="{{ url_for('student_messages') }}"><i class="fas fa-envelope"></i>Messages</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="welcome-text">My Courses</div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+            
+            <div class="course-grid">
+                {% for course in courses %}
+                <div class="course-card">
+                    <div class="course-header">
+                        <h3>{{ course.CourseName }}</h3>
+                        <span class="course-code">{{ course.CourseID }}</span>
+                    </div>
+                    <p><i class="fas fa-user-tie"></i> Prof. {{ course.FacultyFirstName }} {{ course.FacultyLastName }}</p>
+                    <p><i class="fas fa-graduation-cap"></i> Credits: {{ course.CourseCredit }}</p>
+                    
+                    <div class="course-stats">
+                        <div class="stat-box">
+                            <h4>{{ course.attendance_percentage }}%</h4>
+                            <p>Attendance</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>{{ course.assignments_count }}</h4>
+                            <p>Assignments</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>{{ course.grade if course.grade else 'N/A' }}</h4>
+                            <p>Grade</p>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="course-card">
+                    <p>No courses enrolled yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
